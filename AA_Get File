@@ -1,0 +1,11 @@
+Function GetFile(fpath)
+
+Dim Thefile As Integer ', fpath As String
+Application.FileDialog(msoFileDialogOpen).AllowMultiSelect = False 'select 1 file
+Thefile = Application.FileDialog(msoFileDialogOpen).Show 'show window
+If Thefile <> 0 Then 'use selection
+fpath = Application.FileDialog( _
+msoFileDialogOpen).SelectedItems(1)
+End If
+
+End Function
