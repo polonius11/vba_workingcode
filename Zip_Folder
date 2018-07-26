@@ -1,0 +1,46 @@
+'Browse to a folder and zip all files in it
+
+'Source
+'https://www.rondebruin.nl/win/s7/win001.htm
+
+Sub Zip_All_Files_in_Folder_Browse()
+    Dim FileNameZip, FolderName, oFolder
+    Dim strDate As String, DefPath As String
+    Dim oApp As Object
+
+    DefPath = Application.DefaultFilePath
+    If Right(DefPath, 1) <> "\" Then
+        DefPath = DefPath & "\"
+    End If
+
+    strDate = Format(Now, " dd-mmm-yy h-mm-ss")
+    FileNameZip = DefPath & "MyFilesZip " & strDate & ".zip"
+
+    Set oApp = CreateObject("Shell.Application")
+
+    'Browse to the folder
+    Set oFolder = oApp.BrowseForFolder(0, "Select folder to Zip", 512)
+    If Not oFolder Is Nothing Then
+        'Create empty Zip File
+        NewZip (FileNameZip)
+
+        FolderName = oFolder.Self.Path
+        If Right(FolderName, 1) <> "\" Then
+            FolderName = FolderName & "\"
+        End If
+
+        'Copy the files to the compressed folder
+        oApp.Namespace(FileNameZip).CopyHere oApp.Namespace(FolderName).items
+
+        'Keep script waiting until Compressing is done
+        On Error Resume Next
+        Do Until oApp.Namespace(FileNameZip).items.Count = _
+        oApp.Namespace(FolderName).items.Count
+            Application.Wait (Now + TimeValue("0:00:01"))
+        Loop
+        On Error GoTo 0
+
+        MsgBox "You find the zipfile here: " & FileNameZip
+
+    End If
+End Sub
