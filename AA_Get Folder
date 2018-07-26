@@ -1,0 +1,18 @@
+Function GetFolder(folderpath)
+
+'Retrieve Target Folder Path From User
+  Set FldrPicker = Application.FileDialog(msoFileDialogFolderPicker)
+    With FldrPicker
+      .Title = "Choose Folder"
+      .AllowMultiSelect = False
+        If .Show <> -1 Then GoTo GF_exit1:
+        folderpath = .SelectedItems(1) & "\"
+    End With
+GF_exit1:
+
+  folderpath = folderpath
+  If folderpath = "" Then GoTo GF_exit2:
+  rmfilename = Dir(folderpath & "*.xlsx*")
+GF_exit2:
+
+End Function
