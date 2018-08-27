@@ -1,0 +1,61 @@
+Sub ExcelRangeToPowerPoint()
+'PURPOSE: Copy/Paste An Excel Range Into a New PowerPoint Presentation
+'SOURCE: www.TheSpreadsheetGuru.com
+
+Dim rng As Range
+Dim PowerPointApp As Object
+Dim myPresentation As Object
+Dim mySlide As Object
+Dim myShape As Object
+
+'Copy Range from Excel
+  Set rng = ThisWorkbook.ActiveSheet.Range("A1:C12")
+
+'Create an Instance of PowerPoint
+  On Error Resume Next
+
+    'Is PowerPoint already opened?
+      Set PowerPointApp = GetObject(class:="PowerPoint.Application")
+
+    'Clear the error between errors
+      Err.Clear
+
+    'If PowerPoint is not already open then open PowerPoint
+      If PowerPointApp Is Nothing Then Set PowerPointApp = CreateObject(class:="PowerPoint.Application")
+
+    'Handle if the PowerPoint Application is not found
+      If Err.Number = 429 Then
+        MsgBox "PowerPoint could not be found, aborting."
+        Exit Sub
+      End If
+
+  On Error GoTo 0
+
+'Optimize Code
+  Application.ScreenUpdating = False
+
+'Create a New Presentation
+  Set myPresentation = PowerPointApp.Presentations.Add
+
+'Add a slide to the Presentation
+  Set mySlide = myPresentation.Slides.Add(1, 11) '11 = ppLayoutTitleOnly
+
+'Copy Excel Range
+  rng.Copy
+
+'Paste to PowerPoint and position
+  mySlide.Shapes.PasteSpecial DataType:=2  '2 = ppPasteEnhancedMetafile
+  Set myShape = mySlide.Shapes(mySlide.Shapes.Count)
+
+    'Set position:
+      myShape.Left = 66
+      myShape.Top = 152
+
+'Make PowerPoint Visible and Active
+  PowerPointApp.Visible = True
+  PowerPointApp.Activate
+
+'Clear The Clipboard
+  Application.CutCopyMode = False
+
+End Sub

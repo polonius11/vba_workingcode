@@ -1,0 +1,17 @@
+Sub CopySheet()
+dim i as long
+dim xnumber as interger
+dim xname as string
+dim xactivesheet as worksheet
+
+on error resume next
+application.screenupdating = false
+set xactivesheet = worksheet
+xnumber = inputbox("Enter Number of Copies")
+for i = 1 to xnumber
+	xname = activesheet.name
+	xactivesheet.copy after:=activeworkbook.sheets(xname)
+	activesheet.name = "Copy-" & i
+next
+xactivesheet.active
+application.screenupdating = true

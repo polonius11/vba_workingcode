@@ -1,0 +1,30 @@
+Sub SPCheckOutAndEdit()
+‘   >>>>>>> CanCheckOut method will fail if app is not already logged into SharePoint
+
+    ‘ insert URL of Excel workbook on your SharePoint site here...
+    Const sFullname As String = _
+        “http://yaddayadda.com/test.xls”
+    
+    Dim gxlApp      As Excel.Application
+    Dim gxlBooks    As Excel.Workbooks
+    Dim gxlbook     As Excel.Workbook
+    
+    Set gxlApp = Application
+    Set gxlBooks = gxlApp.Workbooks
+
+    ‘ if workbook can be checked out, do so
+    If gxlBooks.CanCheckOut(sFullname) Then
+        gxlBooks.CheckOut (sFullname)
+    End If
+    
+    ‘ open checked out workbook for edit
+    Set gxlbook = gxlBooks.Open(sFullname, ReadOnly:=False)
+    If gxlbook Is Nothing Then Exit Sub
+    
+    ‘ do stuff to workbook here...
+    
+    If gxlbook.CanCheckIn Then
+        gxlbook.CheckIn SaveChanges:=True
+    End If
+
+End Sub

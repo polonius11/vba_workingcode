@@ -1,0 +1,4 @@
+Private Sub Workbook_BeforeSave(ByVal SaveAsUI _ As Boolean, Cancel As Boolean)
+Dim Counter As Range
+Set Counter = Sheets(“Sheet1”).Range(“A1”) Counter.Value = Counter.Value + 1
+End Sub

@@ -1,0 +1,6 @@
+Sub Set_Open_ExistingWorkbook()
+Dim wkb As Workbook
+Set wkb = Workbooks.Open("C:\WorkbookName.xls")
+'OR
+Set wkb = Workbooks.Open(Filename:="C:\WorkbookName1.xls")
+End Sub

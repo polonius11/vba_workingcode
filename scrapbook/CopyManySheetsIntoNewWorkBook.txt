@@ -1,0 +1,2 @@
+Sub CopyManySheetsIntoNewWorkBook
+Sheets(Array("Sheet1","Sheet2")).copy 

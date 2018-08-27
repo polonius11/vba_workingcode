@@ -1,0 +1,10 @@
+Sub SplitDemo()
+    Dim txt As String
+    Dim x As Variant
+    Dim i As Long
+    txt = "The Split function is versatile"
+    x = Split(txt, " ")
+    For i = 0 To UBound(x)
+       Debug.Print x(i)
+    Next i
+End Sub

@@ -1,0 +1,7 @@
+For each colname in colnames
+    for each sheet in sheets
+         find searchcol
+         find retrivecol
+         build vlookup
+     next sheet
+next colnams

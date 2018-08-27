@@ -1,0 +1,68 @@
+Basic file and folder examples
+
+How to get the active station and folder name:
+
+MsgBox "Active station and folder name: " & CurDir
+How to change the active station:
+
+ChDrive "F" ' changes to the F-station
+How to change the active folder:
+
+ChDir "F:\My Documents\Private"
+
+How to determine if a file exists in a folder:
+
+If Len(Dir("F:\My Documents\My Workbook.xls")) > 0 Then
+' the file exists, returns "" (an empty string) if the file doesn't exist.
+How to determine if a folder exists:
+
+If Len(Dir("F:\My Documents\MyFolder", vbDirectory)) > 0 Then
+' the folder exists, returns "" (an empty string) if the file doesn't exist.
+How to delete a file :
+
+Kill "F:\My Documents\My Workbook.xls"
+If you don't specify the station, Excel uses the active station. If you don't specify the folder, Excel uses the active folder.
+
+How to create a new folder:
+
+MkDir "NewPrivateFolder" ' creates a new folder in the active folder
+MkDir "F:\My Documents\NewPrivateFolder"
+' creates a new folder in the existing folder F:\My Documents
+How to delete a folder (folder must be empty):
+
+RmDir "NewPrivateFolder"
+' deletes the subfolder NewPrivateFolder in the active folder
+RmDir "F:\My Documents\NewPrivateFolder"
+' deletes the subfolder NewPrivateFolder in the folder F:\My Documents
+How to copy a file (the file must be closed):
+
+FileCopy "OrgWorkBook.xls", "CopyWorkBook.xls"
+' copies OrgWorkBook.xls to CopyWorkBook.xls in the active folder
+FileCopy "OrgWorkBook.xls", "F:\My Documents\CopyWorkBook.xls"
+' copies OrgWorkBook.xls from the active folder to F:\My Documents\CopyWorkBook.xls
+How to move a file (the file must be closed):
+
+OldFilePath = "C:\OldFolder\Filename.xls" ' original file location
+NewFilePath = "C:\NewFolder\Filename.xls" ' new file location
+Name OldFilePath As NewFilePath ' move the file
+How to copy a folder, including subfolders:
+
+CopyFolderAndSubFolders "C:\FolderName\SourceFolder", "C:\FolderName\TargetFolder"
+
+Sub CopyFolderAndSubFolders(strSourceFolder As String, strTargetFolder As String)
+' example: CopyFolderAndSubFolders "C:\FolderName\SourceFolder", "C:\FolderName\TargetFolder"
+' requires a reference to the Microsoft Scripting runtime library
+Dim fso As Scripting.FileSystemObject
+    Set fso = New Scripting.FileSystemObject
+    Application.StatusBar = "Copying " & strSourceFolder & " to " & strTargetFolder & "..."
+    On Error GoTo NotAbleToCopy
+    fso.CopyFolder strSourceFolder, strTargetFolder, True
+    On Error GoTo 0
+    Application.StatusBar = False
+    Set fso = Nothing
+    Exit Sub
+
+NotAbleToCopy:
+    MsgBox "Error Description: " & vbLf & Err.Description, vbExclamation, "An Error Occurred"
+    Resume Next
+End Sub

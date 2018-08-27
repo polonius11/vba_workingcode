@@ -1,0 +1,14 @@
+Sub sbIE_OpenASite()
+Dim IE As Object
+' Create InternetExplorer Object
+Set IE = CreateObject("InternetExplorer.Application")
+' Send the form data To URL As POST binary request
+IE.Navigate "http://www.excely.com/"
+' Wait while loading...
+Do While IE.Busy
+Application.Wait DateAdd("s", 1, Now)
+Loop
+IE.Visible = True
+'Release
+Set IE = Nothing
+End Sub

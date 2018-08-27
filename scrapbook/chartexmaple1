@@ -1,0 +1,4 @@
+Sub Macro1()
+‘ Recorded by Excel 2013
+ActiveSheet.Shapes.AddChart2(201, xlColumnClustered).Select ActiveChart.SetSourceData Source:=Range(“Sheet1!$A$1:$A$3”) ActiveChart.SetElement (msoElementPrimaryValueGridLinesNone) ActiveChart.ChartTitle.Select
+ActiveChart.ChartTitle.Text = “This is my chart” End Sub

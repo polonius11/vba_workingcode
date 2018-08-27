@@ -1,0 +1,35 @@
+Sub DecideUserInput()
+Dim bText As String, bNumber As Integer
+    ' here is the INPUTBOX-function :
+    bText = InputBox("Insert in a text", "This accepts any input")
+    ' here is the INPUTBOX-method :
+    bNumber = Application.InputBox("Insert a number", "This accepts numbers only", , , , , , 1)
+    MsgBox "You have inserted :" & Chr(13) & _
+        bText & Chr(13) & bNumber, , "Result from INPUT-boxes"
+End Sub
+The INPUTBOX-method has a third argument, Type, that decides what the user is allowd to insert in the INPUTBOX-dialog. Type can be one of the following :
+
+Type :
+
+Accepted input:
+0
+
+A formula
+1
+
+A number
+2
+
+Text
+4
+
+A logical value (True or False)
+8
+
+A cell reference, e.g. a Range-object
+16
+
+An error value, e.g. #N/A
+64
+
+An array of values

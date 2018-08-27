@@ -1,0 +1,34 @@
+' Return True if the string contains only digits.
+Private Function AllDigits(ByVal txt As String) As Boolean
+Dim ch As String
+Dim i As Integer
+
+    AllDigits = True
+    For i = 1 To Len(txt)
+        ' See if the next character is a non-digit.
+        ch = Mid$(txt, i, 1)
+        If ch < "0" Or ch > "9" Then
+            ' This is not a digit.
+            AllDigits = False
+            Exit For
+        End If
+    Next i
+End Function
+
+' Return True if the string contains only letters.
+Private Function AllLetters(ByVal txt As String) As Boolean
+Dim ch As String
+Dim i As Integer
+
+    AllLetters = True
+    txt = UCase$(txt)
+    For i = 1 To Len(txt)
+        ' See if the next character is a non-digit.
+        ch = Mid$(txt, i, 1)
+        If ch < "A" Or ch > "Z" Then
+            ' This is not a letter.
+            AllLetters = False
+            Exit For
+        End If
+    Next i
+End Function

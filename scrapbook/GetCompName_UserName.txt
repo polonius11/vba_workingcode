@@ -1,0 +1,23 @@
+Public Function NameOfComputer()
+'   Returns the name of the computer
+    Dim ComputerName As String
+    Dim ComputerNameLen As Long
+    Dim Result As Long
+    ComputerNameLen = 256
+    ComputerName = Space(ComputerNameLen)
+    Result = GetComputerName(ComputerName, ComputerNameLen)
+    If Result <> 0 Then
+        NameOfComputer = Left(ComputerName, ComputerNameLen)
+    Else
+        NameOfComputer = "Unknown"
+    End If
+End Function
+
+Function UserName() As String
+'   Returns the name of the logged-in user
+    Dim Buffer As String * 100
+    Dim BuffLen As Long
+    BuffLen = 100
+    GetUserName Buffer, BuffLen
+    UserName = Left(Buffer, BuffLen - 1)
+End Function

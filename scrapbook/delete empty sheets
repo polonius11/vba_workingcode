@@ -1,0 +1,8 @@
+Sub DeleteEmptySheets()
+Dim WkSht As Worksheet Application.DisplayAlerts = False
+For Each WkSht In ActiveWorkbook.Worksheets
+If WorksheetFunction.CountA(WkSht.Cells) = 0 Then WkSht.Delete
+                  End If
+              Next WkSht
+Application.DisplayAlerts = True
+End Sub

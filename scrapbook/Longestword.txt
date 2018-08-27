@@ -1,0 +1,13 @@
+Function LongestWord(str) As String
+' Returns the longest word in a string of words
+    Dim x As Variant
+    Dim i As Long
+    str = Application.Trim(str)
+    x = Split(str, " ")
+    LongestWord = x(0)
+    For i = 1 To UBound(x)
+        If Len(x(i)) > Len(LongestWord) Then
+            LongestWord = x(i)
+        End If
+    Next i
+End Function

@@ -1,0 +1,37 @@
+Private Sub UserForm_Initialize()
+Dim MyUniqueList As Variant, i As Long
+    With Me.ListBox1
+        .Clear ' clear the listbox content
+        MyUniqueList = UniqueItemList(Range("A4:A100"), True)
+        For i = 1 To UBound(MyUniqueList)
+            .AddItem MyUniqueList(i)
+        Next i
+        .ListIndex = 0 ' select the first item
+    End With
+End Sub
+
+'Fill a ListBox with unique values from a worksheet
+Private Function UniqueItemList(InputRange As Range, _
+    HorizontalList As Boolean) As Variant
+Dim cl As Range, cUnique As New Collection, i As Long, uList() As Variant
+    Application.Volatile
+    On Error Resume Next
+    For Each cl In InputRange
+        If cl.Formula <> "" Then
+            cUnique.Add cl.Value, CStr(cl.Value)
+        End If
+    Next cl
+    UniqueItemList = ""
+    If cUnique.Count > 0 Then
+        ReDim uList(1 To cUnique.Count)
+        For i = 1 To cUnique.Count
+            uList(i) = cUnique(i)
+        Next i
+        UniqueItemList = uList
+        If Not HorizontalList Then
+            UniqueItemList = _
+                Application.WorksheetFunction.Transpose(UniqueItemList)
+        End If
+    End If
+    On Error GoTo 0
+End Function

@@ -1,0 +1,28 @@
+Function FolderExists(strInputFolder As String, blnCreate As Boolean) As Boolean
+' returns true or false if the folder exists, can create any missing folders
+' example: If Not FolderExists("C:\FolderName\SubFolder", False) Then Exit Sub
+' example: If Not FolderExists("C:\FolderName\NewFolder", True) Then Exit Sub
+Dim strFolder As String, varrFolders As Variant, i As Long
+    FolderExists = False
+    ' validate input
+    If InStr(1, strInputFolder, ":", vbBinaryCompare) <> 2 Then Exit Function
+    If InStr(1, strInputFolder, "\", vbBinaryCompare) = 0 Then Exit Function
+    If blnCreate Then ' try to create any missing folders
+        ' split path into separate folders
+        varrFolders = Split(strInputFolder, "\", -1, vbBinaryCompare)
+        strFolder = varrFolders(LBound(varrFolders)) ' drive letter
+        For i = LBound(varrFolders) + 1 To UBound(varrFolders)
+            strFolder = strFolder & "\" & varrFolders(i) ' add folder to path
+            If Not Len(Dir(strFolder, vbDirectory)) > 0 Then
+                On Error Resume Next
+                MkDir strFolder ' create new folder
+                On Error GoTo 0
+            End If
+        Next i
+        Erase varrFolders
+        ' check and see if the folder exists
+        FolderExists = Len(Dir(strFolder, vbDirectory)) > 0
+    Else ' just check and see if the folder exists
+        FolderExists = Len(Dir(strInputFolder, vbDirectory)) > 0
+    End If
+End Function

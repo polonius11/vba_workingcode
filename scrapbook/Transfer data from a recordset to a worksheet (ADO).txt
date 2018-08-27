@@ -1,0 +1,50 @@
+'Transfer data from a recordset to a worksheet (ADO)
+Sub RS2WS(rs As ADODB.Recordset, TargetCell As Range)
+Dim f As Integer, r As Long, c As Long
+    If rs Is Nothing Then Exit Sub
+    If rs.State <> adStateOpen Then Exit Sub
+    If TargetCell Is Nothing Then Exit Sub
+    
+    With Application
+        .Calculation = xlCalculationManual
+        .ScreenUpdating = False
+        .StatusBar = "Writing data from recordset..."
+    End With
+    
+    With TargetCell.Cells(1, 1)
+        r = .Row
+        c = .Column
+    End With
+    
+    With TargetCell.Parent
+        .Range(.Cells(r, c), .Cells(.Rows.Count, c + rs.Fields.Count - 1)).Clear 
+        ' clear existing contents
+        ' write column headers
+        For f = 0 To rs.Fields.Count - 1
+            On Error Resume Next
+            .Cells(r, c + f).Formula = rs.Fields(f).Name
+            On Error GoTo 0
+        Next f
+        ' write records
+        On Error Resume Next
+        rs.MoveFirst
+        On Error GoTo 0
+        Do While Not rs.EOF
+            r = r + 1
+            For f = 0 To rs.Fields.Count - 1
+                On Error Resume Next
+                .Cells(r, c + f).Formula = rs.Fields(f).Value
+                On Error GoTo 0
+            Next f
+            rs.MoveNext
+        Loop
+        .Rows(TargetCell.Cells(1, 1).Row).Font.Bold = True
+        .Columns("A:IV").AutoFit
+    End With
+    
+    With Application
+        .StatusBar = False
+        .Calculation = xlCalculationAutomatic
+        .ScreenUpdating = True
+    End With
+End Sub

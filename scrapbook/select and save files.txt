@@ -1,0 +1,70 @@
+Select filenames
+
+The macro below shows how you can let the user select a single filename:
+
+Sub OpenOneFile()
+Dim fn As Variant
+    fn = Application.GetOpenFilename("Excel-files,*.xls", _
+        1, "Select One File To Open", , False)
+    If TypeName(fn) = "Boolean" Then Exit Sub 
+    ' the user didn't select a file
+    Debug.Print "Selected file: " & fn
+    Workbooks.Open fn
+End Sub
+The macro below shows how you can let the user select multiple filenames:
+
+Sub OpenMultipleFiles()
+Dim fn As Variant, f As Integer
+    fn = Application.GetOpenFilename("Excel-files,*.xls", _
+        1, "Select One Or More Files To Open", , True)
+    If TypeName(fn) = "Boolean" Then Exit Sub
+    For f = 1 To UBound(fn)
+        Debug.Print "Selected file #" & f & ": " & fn(f)
+        Workbooks.Open fn(f)
+        MsgBox ActiveWorkbook.Name, , "Active Workbook Name:"
+        ActiveWorkbook.Close False 
+        ' close the active workbook without saving any changes
+    Next f
+End Sub
+The macro below shows how you can let the user select a filename for saving a workbook:
+
+Sub SaveOneFile()
+Dim fn As Variant
+    fn = Application.GetSaveAsFilename("MyFileName.xls", _
+        "Excel files,*.xls", 1, "Select your folder and filename")
+    If TypeName(fn) = "Boolean" Then Exit Sub
+    ActiveWorkbook.SaveAs fn
+End Sub
+The macro below shows how you can let the user open any workbook using the built-in Open-dialog:
+
+Sub ShowFileOpenDialog()
+Dim i As Integer
+    i = Workbooks.Count ' count of open workbooks
+    Application.Dialogs(xlDialogOpen).Show ' displays the Open-dialog
+    Select Case Workbooks.Count - i
+        Case Is <= 0 ' no new workbooks opened
+            MsgBox "You did not open any new workbooks!"
+            Exit Sub
+        Case 1 ' add your own code to work on the opened workbook
+            MsgBox "You opened this workbook: " & ActiveWorkbook.Name
+        Case Else ' add your own code to work on the opened workbooks
+            MsgBox "You have opened " & Workbooks.Count - i & " workbooks."
+    End Select
+End Sub
+The macro below shows how you can let the user save a workbook in any folder using the built-in Save as-dialog:
+
+Sub ShowFileSaveAsDialog()
+    Workbooks.Add ' create a new workbook
+    With Worksheets(1).Range("A1") ' add information to the new workbook
+        .Formula = "Log File for " & Format(Date, "yyyy-mm-dd") & ":"
+        .Font.Size = 14
+        .Font.Bold = True
+    End With
+    Application.Dialogs(xlDialogSaveAs).Show ' display the Save as dialog
+    If Len(ActiveWorkbook.Path) = 0 Then ' the workbook was not saved
+        MsgBox "You can save the workbook manually later..."
+    Else
+        MsgBox "The workbook is saved as " & ActiveWorkbook.FullName
+    End If
+End Sub
+ 

@@ -1,0 +1,77 @@
+Basic information about OLE automation
+
+When you want to use functionality from other applications you have to decide if you want to use early or late binding of object variables.
+
+Early binding
+The binding between the object variable and the object takes place when the application is compiled. This results in better performance compared to when the binding takes place when the application is run (late binding). If you want to create an early binding you have to set a reference to the "foreign" object library you want to use. This is done from the VBE by using the menu Tools, References.... When a VBProject has a reference to an object library you can declare specific object variables (e.g. Dim oDoc As Word.Document). This will also make it easier to program the "foreign-objects" since the VBE will display the same programming help regarding properties, methods and events that it displays for the objects belonging to the application you are working from (the VBE has automatically added the reference to this application in advance).
+
+This is a general code example:
+
+Sub OLEAutomationEarlyBinding()
+' replace xxx with one of the following:
+' Access, Excel, Outlook, PowerPoint or Word
+
+Dim oApp As xxx.Application ' early binding
+Dim oDoc As xxx.Document 
+' Excel.Workbook, Outlook.MailItem, PowerPoint.Presentation, Word.Document
+    On Error Resume Next ' ignore errors
+    Set oApp = GetObject(, "xxx.Application") 
+    ' reference an existing application instance
+    If oApp Is Nothing Then ' no existing application is running
+        Set oApp = New xxx.Application ' create a new application instance
+    End If
+    On Error GoTo 0 ' resume normal error handling
+    If oApp Is Nothing Then ' not able to create the application
+        MsgBox "The application is not available!", vbExclamation
+    End If
+    With oApp
+        .Visible = True ' make the application object visible
+        ' at this point the application is visible
+        ' do something depending on the application...
+        Set oDoc = .Documents.Open("c:\foldername\filename.doc")
+        ' open a document
+'        ...
+        oDoc.Close True ' close and save the document
+        .Quit ' close the application
+    End With
+    Set oDoc = Nothing ' free memory
+    Set oApp = Nothing ' free memory
+End Sub
+Late binding
+The binding between the object variable and the object takes place when the application is run. This results in slower performance compared to when the binding takes place when the application is compiled (early binding). If you don't add a reference to the objectlibrary belonging to the "foreign" application  you have to declare general object variables (e.g. Dim oDoc As Object). This will make it more difficult to program the "foreign-objects" since the VBE will not display the same programming help regarding properties, methods and events that it displays for the objects belonging to the application you are working from.
+
+This is a general code example:
+
+Sub OLEAutomationLateBinding()
+' replace xxx with one of the following:
+' Access, Excel, Outlook, PowerPoint or Word
+
+Dim oApp As Object ' late binding
+Dim oDoc As Object ' late binding
+    On Error Resume Next ' ignore errors
+    Set oApp = GetObject(, "xxx.Application") 
+    ' reference an existing application instance
+    If oApp Is Nothing Then ' no existing application is running
+        Set oApp = CreateObject("xxx.Application") 
+        ' create a new application instance
+    End If
+    On Error GoTo 0 ' resume normal error handling
+    If oApp Is Nothing Then ' not able to create the application
+        MsgBox "The application is not available!", vbExclamation
+    End If
+    With oApp
+        .Visible = True ' make the application object visible
+        ' at this point the application is visible
+        ' do something depending on the application...
+        Set oDoc = .Documents.Open("c:\foldername\filename.doc") 
+        ' open a document
+'        ...
+        oDoc.Close True ' close and save the document
+        .Quit ' close the application
+    End With
+    Set oDoc = Nothing ' free memory
+    Set oApp = Nothing ' free memory
+End Sub
+ 
+
+ 

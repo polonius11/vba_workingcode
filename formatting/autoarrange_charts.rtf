@@ -1,0 +1,38 @@
+{\rtf1\ansi\ansicpg1252\cocoartf1561\cocoasubrtf200
+{\fonttbl\f0\fmodern\fcharset0 Courier;}
+{\colortbl;\red255\green255\blue255;\red0\green0\blue0;\red24\green184\blue3;}
+{\*\expandedcolortbl;;\cssrgb\c0\c0\c0;\cssrgb\c0\c75294\c0;}
+\margl1440\margr1440\vieww10800\viewh8400\viewkind0
+\deftab720
+
+\itap1\trowd \taflags0 \trgaph108\trleft-108 \trbrdrt\brdrnil \trbrdrl\brdrnil \trbrdrt\brdrnil \trbrdrr\brdrnil 
+\clvertalt \clshdrawnil \clwWidth20013\clftsWidth3 \clmart10 \clmarl10 \clmarb10 \clmarr10 \clbrdrt\brdrnil \clbrdrl\brdrnil \clbrdrb\brdrnil \clbrdrr\brdrnil \clpadl0 \clpadr0 \gaph\cellx8640
+\pard\intbl\itap1\pardeftab720\partightenfactor0
+
+\f0\fs26 \cf0 \expnd0\expndtw0\kerning0
+Sub ArrangeMyCharts()\
+    Dim iChart As Long\
+    Dim nCharts As Long\
+    Dim dTop As Double\
+    Dim dLeft As Double\
+    Dim dHeight As Double\
+    Dim dWidth As Double\
+    Dim nColumns As Long\
+\
+    dTop = 75      \cf3 ' top of first row of charts\cf0 \
+    dLeft = 100    \cf3 ' left of first column of charts\cf0 \
+    dHeight = 225  \cf3 ' height of all charts\cf0 \
+    dWidth = 375   \cf3 ' width of all charts\cf0 \
+    nColumns = 3   \cf3 ' number of columns of charts\cf0 \
+    nCharts = ActiveSheet.ChartObjects.Count\
+\
+    For iChart = 1 To nCharts\
+        With ActiveSheet.ChartObjects(iChart)\
+            .Height = dHeight\
+            .Width = dWidth\
+            .Top = dTop + Int((iChart - 1) / nColumns) * dHeight\
+            .Left = dLeft + ((iChart - 1) Mod nColumns) * dWidth\
+        End With\
+    Next\
+End Sub\cell \lastrow\row
+}

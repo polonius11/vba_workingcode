@@ -1,0 +1,58 @@
+Sub TestListFilesInFolder()
+    Workbooks.Add ' create a new workbook for the file list
+    ' add headers
+    With Range("A1")
+        .Formula = "Folder contents:"
+        .Font.Bold = True
+        .Font.Size = 12
+    End With
+    Range("A3").Formula = "File Name:"
+    Range("B3").Formula = "File Size:"
+    Range("C3").Formula = "File Type:"
+    Range("D3").Formula = "Date Created:"
+    Range("E3").Formula = "Date Last Accessed:"
+    Range("F3").Formula = "Date Last Modified:"
+    Range("G3").Formula = "Attributes:"
+    Range("H3").Formula = "Short File Name:"
+    Range("A3:H3").Font.Bold = True
+    ListFilesInFolder "C:\FolderName", True 
+    ' list all files included subfolders
+End Sub
+
+Sub ListFilesInFolder(SourceFolderName As String, IncludeSubfolders As Boolean)
+' lists information about the files in SourceFolder
+' example: ListFilesInFolder "C:\FolderName", True
+Dim FSO As Scripting.FileSystemObject
+Dim SourceFolder As Scripting.Folder, SubFolder As Scripting.Folder
+Dim FileItem As Scripting.File
+Dim r As Long
+    Set FSO = New Scripting.FileSystemObject
+    Set SourceFolder = FSO.GetFolder(SourceFolderName)
+    r = Range("A65536").End(xlUp).Row + 1
+    For Each FileItem In SourceFolder.Files
+        ' display file properties
+        Cells(r, 1).Formula = FileItem.Path & FileItem.Name
+        Cells(r, 2).Formula = FileItem.Size
+        Cells(r, 3).Formula = FileItem.Type
+        Cells(r, 4).Formula = FileItem.DateCreated
+        Cells(r, 5).Formula = FileItem.DateLastAccessed
+        Cells(r, 6).Formula = FileItem.DateLastModified
+        Cells(r, 7).Formula = FileItem.Attributes
+        Cells(r, 8).Formula = FileItem.ShortPath & FileItem.ShortName
+        ' use file methods (not proper in this example)
+'        FileItem.Copy "C:\FolderName\Filename.txt", True
+'        FileItem.Move "C:\FolderName\Filename.txt"
+'        FileItem.Delete True
+        r = r + 1 ' next row number
+    Next FileItem
+    If IncludeSubfolders Then
+        For Each SubFolder In SourceFolder.SubFolders
+            ListFilesInFolder SubFolder.Path, True
+        Next SubFolder
+    End If
+    Columns("A:H").AutoFit
+    Set FileItem = Nothing
+    Set SourceFolder = Nothing
+    Set FSO = Nothing
+    ActiveWorkbook.Saved = True
+End Sub

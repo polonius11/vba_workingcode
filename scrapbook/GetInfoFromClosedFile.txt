@@ -1,0 +1,89 @@
+Sub ReadDataFromAllWorkbooksInFolder()
+Dim FolderName As String, wbName As String, r As Long, cValue As Variant
+Dim wbList() As String, wbCount As Integer, i As Integer
+    FolderName = "C:\Foldername"
+    ' create list of workbooks in foldername
+    wbCount = 0
+    wbName = Dir(FolderName & "" & "*.xls")
+    While wbName <> ""
+        wbCount = wbCount + 1
+        ReDim Preserve wbList(1 To wbCount)
+        wbList(wbCount) = wbName
+        wbName = Dir
+    Wend
+    If wbCount = 0 Then Exit Sub
+    ' get values from each workbook
+    r = 0
+    Workbooks.Add
+    For i = 1 To wbCount
+        r = r + 1
+        cValue = GetInfoFromClosedFile(FolderName, wbList(i), "Sheet1", "A1")
+        Cells(r, 1).Formula = wbList(i)
+        Cells(r, 2).Formula = cValue
+    Next i
+End Sub
+
+Private Function GetInfoFromClosedFile(ByVal wbPath As String, _
+    wbName As String, wsName As String, cellRef As String) As Variant
+Dim arg As String
+    GetInfoFromClosedFile = ""
+    If Right(wbPath, 1) <> "" Then wbPath = wbPath & ""
+    If Dir(wbPath & "" & wbName) = "" Then Exit Function
+    arg = "'" & wbPath & "[" & wbName & "]" & _
+        wsName & "'!" & Range(cellRef).Address(True, True, xlR1C1)
+    On Error Resume Next
+    GetInfoFromClosedFile = ExecuteExcel4Macro(arg)
+End Function
+This method has some limitations on how many cells you can return information from since the Excel4-macro creates links to the closed workbook. You can use a similar example using ADO if you need to retrieve a lot of data from a closed workbook.
+
+It is often much easier to open the workbook and get the information from it. If you set the Application.ScreenUpdating to False, the user will probably not notice that the workbook is opened and closed again.
+
+Sub GetDataFromClosedWorkbook()
+Dim wb As Workbook
+    Application.ScreenUpdating = False ' turn off the screen updating
+    Set wb = Workbooks.Open("C:\Foldername\Filename.xls", True, True) 
+    ' open the source workbook, read only
+    With ThisWorkbook.Worksheets("TargetSheetName")
+        ' read data from the source workbook
+        .Range("A10").Formula = wb.Worksheets("SourceSheetName").Range("A10").Formula
+        .Range("A11").Formula = wb.Worksheets("SourceSheetName").Range("A20").Formula
+        .Range("A12").Formula = wb.Worksheets("SourceSheetName").Range("A30").Formula
+        .Range("A13").Formula = wb.Worksheets("SourceSheetName").Range("A40").Formula
+    End With
+    wb.Close False ' close the source workbook without saving any changes
+    Set wb = Nothing ' free memory
+    Application.ScreenUpdating = True ' turn on the screen updating
+End Sub
+Here is another variant:
+
+Sub CopyFromClosedWB(strSourceWB As String, _
+    strSourceWS As String, strSourceRange As String, _
+    rngTarget As Range)
+' copies information from a closed workbook, no input validation!
+' use like this to copy information to the active worksheet:
+' CopyFromClosedWB "C:\Foldername\Filename.xls", "Sheet1", "A1:D100", Range("A1")
+Dim wb As Workbook
+    Application.ScreenUpdating = False ' turn off the screen updating
+    Application.StatusBar = "Copying data from " & strSourceWB & "..."
+    On Error Resume Next ' ignore errors
+    ' open the source workbook, read only
+    Set wb = Workbooks.Open(strSourceWB, True, True)
+    On Error GoTo 0 ' stop when errors occur
+    If Not wb Is Nothing Then ' opened the workbook
+        On Error Resume Next ' ignore errors
+        With wb.Worksheets(strSourceWS).Range(strSourceRange)
+            .Copy rngTarget
+        End With
+        On Error GoTo 0 ' stop when errors occur
+        wb.Close False ' close the source workbook without saving changes
+        Set wb = Nothing ' free memory
+    End If
+    Application.StatusBar = False ' reset status bar
+    Application.ScreenUpdating = True ' turn on the screen updating
+End Sub
+
+Sub TestCopyFromClosedWB()
+    CopyFromClosedWB "C:\Foldername\Filename.xls", _
+        "SheetName", "A1:D10", Range("A1")
+End Sub
+ 

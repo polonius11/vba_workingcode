@@ -1,0 +1,13 @@
+Sub UsingErr()
+
+    On Error Goto eh
+    
+    Dim total As Long
+    total = “aa”
+
+Done:
+    Exit Sub
+eh:
+    Debug.Print “Error number: “ & Err.Number _
+            & “ “ & Err.Description
+End Sub

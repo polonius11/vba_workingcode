@@ -1,0 +1,8 @@
+Private Sub Workbook_BeforeClose(Cancel As Boolean) Dim Msg As String
+Dim Ans As Integer
+Dim FName As String
+Msg = “Would you like to make a backup of this file?” Ans = MsgBox(Msg, vbYesNo)
+If Ans = vbYes Then
+FName = “F:\BACKUP\” & ThisWorkbook.Name
+ThisWorkbook.SaveCopyAs FName End If
+End Sub

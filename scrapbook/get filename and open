@@ -1,0 +1,21 @@
+Sub GetImportFileName ()
+Dim Finfo As String
+Dim FilterIndex As Integer Dim Title As String
+Dim FileName As Variant
+‘ Set up list of file filters
+FInfo = “Text Files (*.txt),*.txt,” & _
+“Lotus Files (*.prn),*.prn,” & _
+“Comma Separated Files (*.csv),*.csv,” & _ “ASCII Files (*.asc),*.asc,” & _
+“All Files (*.*),*.*”
+‘ Display *.* by default FilterIndex = 5
+‘ Set the dialog box caption
+Title = “Select a File to Import”
+ Get the filename
+FileName = Application.GetOpenFilename (FInfo, _
+FilterIndex, Title)
+‘ Handle return info from dialog box If FileName = False Then
+MsgBox “No file was selected.” Else
+MsgBox “You selected “ & FileName End If
+End Sub
+
+Workbooks.Open FileName

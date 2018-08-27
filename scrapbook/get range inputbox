@@ -1,0 +1,9 @@
+
+Sub GetRange()
+Dim Rng As Range
+On Error Resume Next
+Set Rng = Application.InputBox _
+(prompt:=”Specify a range:”, Type:=8)
+If Rng Is Nothing Then Exit Sub
+MsgBox “You selected range “ & Rng.Address
+End Sub

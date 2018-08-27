@@ -1,0 +1,7 @@
+Dim celltxt As String
+celltxt = ActiveSheet.Range("C6").Text
+If InStr(1, celltxt, "CHECKED OUT") Then
+MsgBox ("found it")
+Else
+MsgBox ("no")
+End If

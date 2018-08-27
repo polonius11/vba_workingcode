@@ -1,0 +1,14 @@
+Sub StatusBarExample()
+    Application.ScreenUpdating = False 
+    ' turns off screen updating
+    Application.DisplayStatusBar = True 
+    ' makes sure that the statusbar is visible
+    Application.StatusBar = "Please wait while performing task 1..."
+    ' add some code for task 1 that replaces the next sentence
+    Application.Wait Now + TimeValue("00:00:02")
+    Application.StatusBar = "Please wait while performing task 2..."
+    ' add some code for task 2 that replaces the next sentence
+    Application.Wait Now + TimeValue("00:00:02")
+    Application.StatusBar = False 
+    ' gives control of the statusbar back to the programme
+End Sub

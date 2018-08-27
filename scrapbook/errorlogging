@@ -1,0 +1,23 @@
+Sub Logger(sType As String, sSource As String, sDetails As String)
+    
+    Dim sFilename As String
+    sFilename = “C:\temp\logging.txt”
+    
+    ‘ Archive file at certain size
+    If FileLen(sFilename) > 20000 Then
+        FileCopy sFilename _
+            , Replace(sFilename, “.txt”, Format(Now, “ddmmyyyy hhmmss.txt”))
+        Kill sFilename
+    End If
+    
+    ‘ Open the file to write
+    Dim filenumber As Variant
+    filenumber = FreeFile 
+    Open sFilename For Append As #filenumber
+    
+    Print #filenumber, CStr(Now) & “,” & sType & “,” & sSource _
+                                & “,” & sDetails & “,” & Application.UserName
+    
+    Close #filenumber
+    
+End Sub

@@ -1,0 +1,28 @@
+Function GetComment(incell) As String
+' aceepts a cell as input and returns its comments (if any) back as a string
+On Error Resume Next
+GetComment = incell.Comment.Text
+End Function
+
+Sub MerdgeComments()
+
+For x = 1 To 36
+    For y = 1 To 64
+    
+CellAddress = Cells(x, y).Address(RowAbsolute:=False, ColumnAbsolute:=False)
+    
+        CommentToAdd1 = GetComment(Sheets("Southeast").Cells(x, y))
+        CommentToAdd2 = GetComment(Sheets("Solstas").Cells(x, y))
+        ExistingComment = GetComment(Sheets("Total_South").Cells(x, y))
+        If CommentToAdd <> "" Then
+
+            If ExistingComment = "" Then Sheets("sheet1").Range(CellAddress).AddComment.Text CommentToAdd
+            GoTo Exit1:
+            Sheets("Total_South").Range(CellAddress).Comment.Text ExistingComment & " " & CommentToAdd
+        End If
+Exit1:
+    Next y
+Next x
+
+
+End Sub

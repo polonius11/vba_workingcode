@@ -1,0 +1,6 @@
+Sub sb_Copy_Save_ActiveSheet_As_Workbook()
+Set wb = Workbooks.Add
+ThisWorkbook.Activate
+ActiveSheet.Copy Before:=wb.Sheets(1)
+wb.Activate
+wb.SaveAs "C:\temp\test3.xlsx"End Sub 

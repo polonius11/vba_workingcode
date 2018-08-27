@@ -1,0 +1,4 @@
+Private Sub Workbook_Open() Dim Msg As String
+If Weekday(Now) = 6 Then
+Msg = “Today is Friday. Don’t forget to “ Msg = Msg & “submit the TPS Report!” MsgBox Msg
+End If End Sub

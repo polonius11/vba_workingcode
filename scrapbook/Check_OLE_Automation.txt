@@ -1,0 +1,21 @@
+Function ApplicationIsRunning(ApplicationClassName As String) As Boolean
+' returns True if the application is running
+' example: If Not ApplicationIsRunning("Outlook.Application") Then Exit Sub
+Dim AnyApp As Object
+  On Error Resume Next
+  Set AnyApp = GetObject(, ApplicationClassName)
+  ApplicationIsRunning = Not AnyApp Is Nothing
+  Set AnyApp = Nothing
+  On Error GoTo 0
+End Function
+
+Function ApplicationIsAvailable(ApplicationClassName As String) As Boolean
+' returns True if the application is available
+' example: If Not ApplicationIsAvailable("Outlook.Application") Then Exit Sub
+Dim AnyApp As Object
+  On Error Resume Next
+  Set AnyApp = CreateObject(ApplicationClassName)
+  ApplicationIsAvailable = Not AnyApp Is Nothing
+  Set AnyApp = Nothing
+  On Error GoTo 0
+End Functionn

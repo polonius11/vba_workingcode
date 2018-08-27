@@ -1,0 +1,34 @@
+Sub test()
+    Dim olApp As Outlook.Application, olNs As Outlook.Namespace
+    Dim olFolder As Outlook.MAPIFolder, olMail As Outlook.MailItem
+    Dim eFolder As Outlook.Folder '~~> additional declaration
+    Dim i As Long
+    Dim x As Date, ws As Worksheet '~~> declare WS variable instead
+    Dim lrow As Long '~~> additional declaration
+
+    Set ws = Activesheet '~~> or you can be more explicit using the next line
+    'Set ws = Thisworkbook.Sheets("YourTargetSheet")
+    Set olApp = New Outlook.Application
+    Set olNs = olApp.GetNamespace("MAPI")
+    x = Date
+
+    For Each eFolder In olNs.GetDefaultFolder(olFolderInbox).Folders
+        'Debug.Print eFolder.Name
+        Set olFolder = olNs.GetDefaultFolder(olFolderInbox).Folders(eFolder.Name)
+        For i = olFolder.Items.Count To 1 Step -1
+            If TypeOf olFolder.Items(i) Is MailItem Then
+                Set olMail = olFolder.Items(i)
+                If InStr(olMail.Subject, "transactions") > 0 _
+                And InStr(olMail.ReceivedTime, x) > 0 Then
+                    With ws
+                       lrow = .Range("A" & .Rows.Count).End(xlup).Row
+                       .Range("A" & lrow).Offset(1,0).value = olMail.Subject
+                       .Range("A" & lrow).Offset(1,1).Value = olMail.ReceivedTime
+                       .Range("A" & lrow).Offset(1,2).Value = olMail.SenderName
+                    End With
+                End If
+            End If
+        Next i
+        Set olFolder = Nothing
+    Next eFolder
+End Sub

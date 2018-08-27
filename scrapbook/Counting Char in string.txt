@@ -1,0 +1,9 @@
+Counting specific characters in a string
+The function below accepts a string and a substring as arguments, and returns the number of times the substring is contained in the string.
+
+Function CountOccurrences(str, substring) As Long
+'   Returns the number of times substring appears in str
+    Dim x As Variant
+    x = Split(str, substring)
+    CountOccurrences = UBound(x)
+End Function

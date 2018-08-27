@@ -1,0 +1,22 @@
+' no loop
+'static'
+sub cloudarray()
+dim cloudarray(1 to 10) as variant
+  cloudarray(1) = "Hello" ' set value'
+end sub
+
+
+#### x and y axis
+sub cloudarray()
+dim cloudarray(1 to 10, 1 to 2) as variant
+  cloudarray(1,1) = "Hello"
+  cloudarray(1,2) = "Hello Again"
+end sub
+
+' with look and redim dynamic size
+sub cloudarray()
+dim cloudarray() as variant
+for x = 1 to 10
+  re dim preserve cloudarry(x)
+  cloudarray(x) = "Hello"
+end sub

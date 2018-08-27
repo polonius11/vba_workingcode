@@ -1,0 +1,9 @@
+Dim ws As Worksheet, a As Range
+
+Sub forEachWs()
+
+For Each ws In ActiveWorkbook.Worksheets
+	'do something
+Next
+
+End Sub

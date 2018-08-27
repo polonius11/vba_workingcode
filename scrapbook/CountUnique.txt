@@ -1,0 +1,11 @@
+Public Function CountUnique (rng As Range) As Integer
+        Dim dict As Dictionary
+        Dim cell As Range
+        Set dict = New Dictionary
+        For Each cell In rng.Cells
+             If Not dict.Exists(cell.Value) Then
+                dict.Add cell.Value, 0
+            End If
+        Next
+        CountUnique = dict.Count
+    End Function

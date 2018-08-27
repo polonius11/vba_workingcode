@@ -1,0 +1,123 @@
+Sub CreateNewPowerPointPresentation()
+' to test this code, paste it into an Excel module
+' add a reference to the PowerPoint-library
+' create a new folder named C:\Foldername or edit the filnames in the code
+Dim pptApp As PowerPoint.Application
+Dim pptPres As PowerPoint.Presentation
+Dim pptSlide As PowerPoint.Slide
+Dim pptShape As PowerPoint.Shape
+Dim i As Integer, strString As String
+    Set pptApp = CreateObject("PowerPoint.Application")
+    Set pptPres = pptApp.Presentations.Add(msoTrue) ' create a new presentation
+    ' or open an existing presentation
+    ' Set pptPres = pptApp.Presentations.Open("C:\Foldername\Filename.ppt")
+    
+    ' apply a slide template
+    pptPres.ApplyTemplate "C:\Program Files\Office XP\Templates\Presentation Designs\Globe.pot"
+    
+    With pptPres.Slides
+        Set pptSlide = .Add(.Count + 1, ppLayoutText) ' add a slide
+    End With
+    With pptSlide ' add contents to a slide
+        .Shapes(1).TextFrame.TextRange.Text = "Slide Title" ' add a slide title
+        For i = 1 To 5 ' create slide text content
+            strString = strString & "Item number #" & i & Chr(13)
+        Next i
+        strString = Left$(strString, Len(strString) - 1)
+        .Shapes(2).TextFrame.TextRange.Text = strString ' add text content
+    End With
+    
+    ThisWorkbook.Worksheets(1).Range("A3:D10").Copy ' copy an Excel range
+    
+    With pptPres.Slides
+        Set pptSlide = .Add(.Count + 1, ppLayoutText) ' add a slide
+    End With
+    With pptSlide
+        .Shapes(1).TextFrame.TextRange.Text = "Slide Title" ' add a slide title
+        .Shapes(2).Delete ' remove the text box
+        .Shapes.Paste
+        With .Shapes(.Shapes.Count)
+            .Left = 50
+            .Top = 100
+            .Width = 600
+            .Height = 400
+        End With
+    End With
+    
+    With pptPres.Slides
+        Set pptSlide = .Add(.Count + 1, ppLayoutText) ' add a slide
+    End With
+    With pptSlide
+        .Shapes(1).TextFrame.TextRange.Text = "Slide Title" ' add a slide title
+        .Shapes(2).Delete ' remove the text box
+        .Shapes.PasteSpecial ppPasteBitmap
+        With .Shapes(.Shapes.Count)
+            .Left = 50
+            .Top = 150
+            .Width = 600
+            '.Height = 250
+        End With
+    End With
+    
+    With pptPres.Slides
+        Set pptSlide = .Add(.Count + 1, ppLayoutText) ' add a slide
+    End With
+    With pptSlide
+        .Shapes(1).TextFrame.TextRange.Text = "Slide Title" ' add a slide title
+        .Shapes(2).Delete ' remove the text box
+        .Shapes.PasteSpecial ppPasteOLEObject
+        With .Shapes(.Shapes.Count)
+            .Left = 50
+            .Top = 150
+            .Width = 600
+            '.Height = 250
+        End With
+    End With
+    
+    ThisWorkbook.Worksheets(1).ChartObjects(1).Copy ' copy an Excel chart item
+    With pptPres.Slides
+        Set pptSlide = .Add(.Count + 1, ppLayoutTitleOnly) ' add a slide
+    End With
+    With pptSlide
+        .Shapes(1).TextFrame.TextRange.Text = "Slide Title" ' add a slide title
+        .Shapes.PasteSpecial ppPasteDefault
+        With .Shapes(.Shapes.Count)
+            .Left = 120
+            .Top = 125.125
+            .Width = 480
+            .Height = 289.625
+        End With
+    End With
+    
+'    ThisWorkbook.Charts(1).ChartArea.Copy ' copy an Excel chart
+'    With pptPres.Slides
+'        Set pptSlide = .Add(.Count + 1, ppLayoutTitleOnly) ' add a slide
+'    End With
+'    With pptSlide
+'        .Shapes(1).TextFrame.TextRange.Text = "Slide Title" ' add a slide title
+'        .Shapes.PasteSpecial ppPasteDefault
+'        With .Shapes(.Shapes.Count)
+'            .Left = 120
+'            .Top = 125.125
+'            .Width = 480
+'            .Height = 289.625
+'        End With
+'    End With
+    
+    Application.CutCopyMode = False ' end cut/copy from Excel
+    Set pptSlide = Nothing
+    
+    On Error Resume Next ' ignore errors
+    Kill "C:\Foldername\MyNewPresentation.ppt"
+    With pptPres
+        .SaveAs "C:\Foldername\MyNewPresentation.ppt"
+        '.Close ' close the presentation
+    End With
+    On Error GoTo 0 ' resume normal error handling
+    Set pptPres = Nothing
+    
+    pptApp.Visible = True ' display the application
+    'pptApp.Quit ' or close the PowerPoint application
+    Set pptApp = Nothing
+End Sub
+ 

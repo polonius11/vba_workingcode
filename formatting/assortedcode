@@ -1,0 +1,427 @@
+Sub HighlightDuplicateValues()
+Dim myRange As Range
+Dim myCell As Range
+Set myRange = Selection
+For Each myCell In myRange
+If WorksheetFunction.CountIf(myRange, myCell.Value) > 1 Then
+myCell.Interior.ColorIndex = 36
+End If
+Next myCell
+End Sub
+
+Sub TopTen()
+Selection.FormatConditions.AddTop10
+Selection.FormatConditions(Selection.FormatConditions.Count).SetFirstPriority
+With Selection.FormatConditions(1)
+.TopBottom = xlTop10Top
+.Rank = 10
+.Percent = False
+End With
+With Selection.FormatConditions(1).Font
+.Color = -16752384
+.TintAndShade = 0
+End With
+With Selection.FormatConditions(1).Interior
+.PatternColorIndex = xlAutomatic
+.Color = 13561798
+.TintAndShade = 0
+End With
+Selection.FormatConditions(1).StopIfTrue = False
+End Sub
+
+Sub HighlightRanges()
+Dim RangeName As Name
+Dim HighlightRange As Range
+On Error Resume Next
+For Each RangeName In ActiveWorkbook.Names
+Set HighlightRange = RangeName.RefersToRange
+HighlightRange.Interior.ColorIndex = 36
+Next RangeName
+End Sub
+
+Sub HighlightGreaterThanValues()
+Dim i As Integer
+i = InputBox("Enter Greater Than Value", "Enter Value")
+Selection.FormatConditions.Delete
+Selection.FormatConditions.Add Type:=xlCellValue, Operator:=xlGreater, Formula1:=i
+Selection.FormatConditions(Selection.FormatConditions.Count).SetFirstPriority
+With Selection.FormatConditions(1)
+.Font.Color = RGB(0, 0, 0)
+.Interior.Color = RGB(31, 218, 154)
+End With
+End Sub
+
+Sub HighlightLowerThanValues()
+Dim i As Integer
+i = InputBox("Enter Lower Than Value", "Enter Value")
+Selection.FormatConditions.Delete
+Selection.FormatConditions.Add Type:=xlCellValue, Operator:=xlLower, Formula1:=i
+Selection.FormatConditions(Selection.FormatConditions.Count).SetFirstPriority
+With Selection.FormatConditions(1)
+.Font.Color = RGB(0, 0, 0)
+.Interior.Color = RGB(217, 83, 79)
+End With
+End Sub
+
+Sub highlightNegativeNumbers()
+Dim Rng As Range
+For Each Rng In Selection
+If WorksheetFunction.IsNumber(Rng) Then
+If Rng.Value < 0 Then
+Rng.Font.Color= -16776961
+End If
+End If
+Next
+End Sub
+
+Sub highlightValue()
+Dim myStr As String
+Dim myRg As Range
+Dim myTxt As String
+Dim myCell As Range
+Dim myChar As String
+Dim I As Long
+Dim J As Long
+On Error Resume Next
+If ActiveWindow.RangeSelection.Count> 1 Then
+myTxt= ActiveWindow.RangeSelection.AddressLocal
+Else
+myTxt= ActiveSheet.UsedRange.AddressLocal
+End If
+LInput: Set myRg= Application.InputBox("please select the data range:", "Selection Required", myTxt, , , , , 8)
+If myRg Is Nothing Then
+Exit Sub
+If myRg.Areas.Count > 1 Then
+MsgBox"not support multiple columns" GoToLInput
+End If
+If myRg.Columns.Count <> 2 Then
+MsgBox"the selected range can only contain two columns "
+GoTo LInput
+End If
+For I = 0 To myRg.Rows.Count-1
+myStr= myRg.Range("B1").Offset(I, 0).Value
+With myRg.Range("A1").Offset(I, 0)
+.Font.ColorIndex= 1
+For J = 1 To Len(.Text)
+Mid(.Text, J, Len(myStr)) = myStrThen
+.Characters(J, Len(myStr)).Font.ColorIndex= 3
+Next
+End With
+Next I
+End Sub
+
+
+Sub highlightCommentCells()
+Selection.SpecialCells(xlCellTypeComments).Select
+Selection.Style= "Note"
+End Sub
+
+Sub highlightAlternateRows()
+Dim rng As Range
+For Each rng In Selection.Rows
+If rng.RowMod 2 = 1 Then
+rng.Style= "20% -Accent1"
+rng.Value= rng^ (1 / 3)
+Else
+End If
+Next rng
+End Sub
+
+Sub HighlightMisspelledCells()
+Dim rng As Range
+For Each rng In ActiveSheet.UsedRange
+If Not Application.CheckSpelling(word:=rng.Text) Then
+rng.Style= "Bad" End If
+Next rng
+End Sub
+
+Sub highlightErrors()
+Dim rng As Range
+Dim i As Integer
+For Each rng In ActiveSheet.UsedRange
+If WorksheetFunction.IsError(rng) Then
+i = i + 1 rng.Style = "bad"
+End If
+Next rng
+MsgBox "There are total " & i & " error(s) in this worksheet."
+End Sub
+
+Sub highlightSpecificValues()
+Dim rng As Range
+Dim i As Integer
+Dim c As Variant
+c = InputBox("Enter Value To Highlight")
+For Each rng In ActiveSheet.UsedRange
+If rng = c Then
+rng.Style = "Note"
+i = i + 1
+End If
+Next rng
+MsgBox "There are total " & i &" "& c & " in this worksheet."
+End Sub
+
+Sub blankWithSpace()
+Dim rng As Range
+For Each rng In ActiveSheet.UsedRange
+If rng.Value = " " Then
+rng.Style = "Note"
+End If
+Next rng
+End Sub
+
+Sub highlightMaxValue()
+Dim rng As Range
+For Each rng In Selection
+If rng = WorksheetFunction.Max(Selection) Then
+rng.Style = "Good"
+End If
+Next rng
+End Sub
+
+Sub highlightMinValue()
+Dim rng As Range
+For Each rng In Selection
+If rng = WorksheetFunction.Min(Selection) Then
+rng.Style = "Good"
+End If
+Next rng
+End Sub
+
+Sub highlightUniqueValues()
+Dim rng As Range
+Set rng = Selection
+rng.FormatConditions.Delete
+Dim uv As UniqueValues
+Set uv = rng.FormatConditions.AddUniqueValues
+uv.DupeUnique = xlUnique
+uv.Interior.Color = vbGreen
+End Sub
+
+Sub printSelection()
+Selection.PrintOutCopies:=1, Collate:=True
+End Sub
+
+Sub HideWorksheet()
+Dim ws As Worksheet
+For Each ws In ThisWorkbook.Worksheets
+If ws.Name <> ThisWorkbook.ActiveSheet.Name Then
+ws.Visible = xlSheetHidden
+End If
+Next ws
+End Sub
+
+Sub UnhideAllWorksheet()
+Dim ws As Worksheet
+For Each ws In ActiveWorkbook.Worksheets
+ws.Visible = xlSheetVisible
+Next ws
+End Sub
+
+Sub Resize_Charts()
+Dim i As Integer
+For i = 1 To ActiveSheet.ChartObjects.Count
+With ActiveSheet.ChartObjects(i)
+.Width = 300
+.Height = 200
+End With
+Next i
+End Sub
+
+Sub SortWorksheets()
+Dim i As Integer
+Dim j As Integer
+Dim iAnswer As VbMsgBoxResult
+iAnswer = MsgBox("Sort Sheets in Ascending Order?" & Chr(10) _
+& "Clicking No will sort in Descending Order", _
+vbYesNoCancel + vbQuestion + vbDefaultButton1, "Sort Worksheets")
+For i = 1 To Sheets.Count
+For j = 1 To Sheets.Count - 1
+If iAnswer = vbYes Then
+If UCase$(Sheets(j).Name) > UCase$(Sheets(j + 1).Name) Then
+Sheets(j).Move After:=Sheets(j + 1)
+End If
+ElseIf iAnswer = vbNo Then
+If UCase$(Sheets(j).Name) < UCase$(Sheets(j + 1).Name) Then
+Sheets(j).Move After:=Sheets(j + 1)
+End If
+End If
+Next j
+Next i
+End Sub
+
+Sub lockCellsWithFormulas()
+With ActiveSheet
+.Unprotect
+.Cells.Locked = False
+.Cells.SpecialCells(xlCellTypeFormulas).Locked = True
+.Protect AllowDeletingRows:=True
+End With
+End Sub
+
+Sub deleteBlankWorksheets()
+Dim Ws As Worksheet
+On Error Resume Next
+Application.ScreenUpdating= False
+Application.DisplayAlerts= False
+For Each Ws In Application.Worksheets
+If Application.WorksheetFunction.CountA(Ws.UsedRange) = 0 Then
+Ws.Delete
+End If
+Next
+Application.ScreenUpdating= True
+Application.DisplayAlerts= True
+End Sub
+
+Sub UnhideRowsColumns()
+Columns.EntireColumn.Hidden = False
+Rows.EntireRow.Hidden = False
+End Sub
+
+Sub SaveWorkshetAsPDF()
+Dimws As Worksheet
+For Each ws In Worksheetsws.ExportAsFixedFormat xlTypePDF, “ENTER-FOLDER-NAME-HERE" & ws.Name & ".pdf" Nextws
+End Sub
+
+Sub FileBackUp()
+ThisWorkbook.SaveCopyAs Filename:=ThisWorkbook.Path & _
+"" & Format(Date, "mm-dd-yy") & " " & _
+ThisWorkbook.name
+End Sub
+
+Sub CopyWorksheetToNewWorkbook()
+ThisWorkbook.ActiveSheet.Copy _
+Before:=Workbooks.Add.Worksheets(1)
+End Sub
+
+Sub VisibleWorkbooks()
+Dim book As Workbook
+Dim i As Integer
+For Each book In Workbooks
+If book.Saved = False Then
+i = i + 1
+End If
+Next book
+MsgBox i
+End Sub
+
+Sub HideSubtotals()
+Dim pt As PivotTable
+Dim pf As PivotField
+On Error Resume Next
+Set pt = ActiveSheet.PivotTables(ActiveCell.PivotTable.name)
+If pt Is Nothing Then
+MsgBox "You must place your cursor inside of a PivotTable."
+Exit Sub
+End If
+For Each pf In pt.PivotFields
+pf.Subtotals(1) = True
+pf.Subtotals(1) = False
+Next pf
+End Sub
+
+Sub AddChartTitle()
+Dim i As Variant
+i = InputBox("Please enter your chart title", "Chart Title")
+On Error GoTo Last
+ActiveChart.SetElement (msoElementChartTitleAboveChart)
+ActiveChart.ChartTitle.Text = i
+Last:
+Exit Sub
+End Sub
+
+Sub SaveSelectionAsPDF()
+Selection.ExportAsFixedFormat Type:=xlTypePDF, OpenAfterPublish:=True
+End Sub
+
+Sub TableofContent()
+Dim i As Long
+On Error Resume Next
+Application.DisplayAlerts = False
+Worksheets("Table of Content").Delete
+Application.DisplayAlerts = True
+On Error GoTo 0
+ThisWorkbook.Sheets.Add Before:=ThisWorkbook.Worksheets(1)
+ActiveSheet.Name = "Table of Content"
+For i = 1 To Sheets.Count
+With ActiveSheet
+.Hyperlinks.Add _
+Anchor:=ActiveSheet.Cells(i, 1), _
+Address:="", _
+SubAddress:="'" & Sheets(i).Name & "'!A1", _
+ScreenTip:=Sheets(i).Name, _
+TextToDisplay:=Sheets(i).Name
+End With
+Next i
+End Sub
+
+Sub ConvertToValues()
+Dim MyRange As Range
+Dim MyCell As Range
+Select Case MsgBox("You Can't Undo This Action. " & "Save Workbook First?", vbYesNoCancel, "Alert")
+Case Is = vbYes
+ThisWorkbook.Save
+Case Is = vbCancel
+Exit Sub
+End Select
+Set MyRange = Selection
+For Each MyCell In MyRange
+If MyCell.HasFormula Then
+MyCell.Formula = MyCell.Value
+End If
+Next MyCell
+End Sub
+
+Sub RemoveSpaces()
+Dim myRange As Range
+Dim myCell As Range
+Select Case MsgBox("You Can't Undo This Action. " & "Save Workbook First?", _
+vbYesNoCancel, "Alert")
+Case Is = vbYesThisWorkbook.Save
+Case Is = vbCancel
+Exit Sub
+End Select
+Set myRange = Selection
+For Each myCell In myRange
+If Not IsEmpty(myCell) Then
+myCell = Trim(myCell)
+End If
+Next myCell
+End Sub
+
+Sub date2day()
+Dim tempCell As Range
+Selection.Value = Selection.Value
+For Each tempCell In Selection
+If IsDate(tempCell) = True Then
+With tempCell
+.Value = Day(tempCell)
+.NumberFormat = "0"
+End With
+End If
+Next tempCell
+End Sub
+
+Sub convertLowerCase()
+Dim Rng As Range
+For Each Rng In Selection
+If Application.WorksheetFunction.IsText(Rng) Then
+Rng.Value= LCase(Rng)
+End If
+Next
+End Sub
+
+Sub Word_Count_Worksheet()
+Dim WordCnt As Long
+Dim rng As Range
+Dim S As String
+Dim N As Long
+For Each rng In ActiveSheet.UsedRange.Cells
+S = Application.WorksheetFunction.Trim(rng.Text)
+N = 0
+If S <> vbNullString Then
+N = Len(S) - Len(Replace(S, " ", "")) + 1
+End If
+WordCnt = WordCnt + N
+Next rng
+MsgBox "There are total " & Format(WordCnt, "#,##0") & " words in the active worksheet"
+End Sub

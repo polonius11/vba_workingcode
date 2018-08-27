@@ -1,0 +1,1 @@
+TheName = InputBox(“What is your name?”, “Greetings”)

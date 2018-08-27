@@ -1,0 +1,5 @@
+Private Sub Worksheet_Change(ByVal Target As Range) If Target.Address = “$A$1” Then
+If Not IsNumeric(Target) Then
+MsgBox “Enter a number in cell A1.” Range(“A1”).ClearContents Range(“A1”).Activate
+End If End If
+End Sub

@@ -1,0 +1,8 @@
+Function SheetExists(shtname as string, optional wb as workbook) as boolean
+	dim sht as worksheet
+	if wb is nothing then set wb = workbook
+	on error resume next
+	set sht = wb.sheets(shtname)
+	on error goto 0
+	sheetexists = not sht in nothing
+end function
